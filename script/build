@@ -17,9 +17,9 @@ NAME=$(cat package.json | jq --raw-output .name)
 for os in "${OSES[@]}"; do
   for arch in "${ARCHS[@]}"; do
     LDFLAGS="-s -w"
-    # if [[ "$os" == "windows" ]]; then
-    #   LDFLAGS="$LDFLAGS -H=windowsgui"
-    # fi
+    if [[ "$os" == "windows" ]]; then
+      LDFLAGS="$LDFLAGS -H=windowsgui"
+    fi
 
     GOOS="$os" GOARCH="$arch" go build -ldflags "$LDFLAGS" -o "dist/$NAME-$os-$arch" ./cmd/sisr-remote-helper.go
   done
