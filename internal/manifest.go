@@ -1,4 +1,4 @@
-package sish
+package sisr_remote_helper
 
 import (
 	_ "embed"

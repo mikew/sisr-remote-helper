@@ -21,7 +21,7 @@ for os in "${OSES[@]}"; do
     #   LDFLAGS="$LDFLAGS -H=windowsgui"
     # fi
 
-    GOOS="$os" GOARCH="$arch" go build -ldflags "$LDFLAGS" -o "dist/$NAME-$os-$arch" ./cmd/sish.go
+    GOOS="$os" GOARCH="$arch" go build -ldflags "$LDFLAGS" -o "dist/$NAME-$os-$arch" ./cmd/sisr-remote-helper.go
   done
 done
 

@@ -1,4 +1,4 @@
-module github.com/mikew/sish
+module github.com/mikew/sisr-remote-helper
 
 go 1.25.0
 

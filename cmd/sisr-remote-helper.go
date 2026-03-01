@@ -10,17 +10,17 @@ import (
 	"syscall"
 	"time"
 
-	sish "github.com/mikew/sish/internal"
+	srh "github.com/mikew/sisr-remote-helper/internal"
 	"github.com/urfave/cli/v3"
 )
 
 func main() {
-	manifest, err := sish.GetManifest()
+	manifest, err := srh.GetManifest()
 	if err != nil {
 		log.Fatalf("Failed to get manifest: %v", err)
 	}
 
-	logFile, prepareLoggerErr := sish.PrepareLogger()
+	logFile, prepareLoggerErr := srh.PrepareLogger()
 	if prepareLoggerErr != nil {
 		log.Fatalf("Failed to prepare logger: %v", prepareLoggerErr)
 	}
@@ -135,7 +135,7 @@ var uwpCommand = cli.Command{
 
 		slog.Info("Launching app", slog.Any("aumid", aumid))
 		// procAllowSetForeground.Call(uintptr(ASFW_ANY))
-		if err := sish.StartAndWaitForUwpApp(aumid); err != nil {
+		if err := srh.StartAndWaitForUwpApp(aumid); err != nil {
 			return fmt.Errorf("failed to start and wait for UWP app: %w", err)
 		}
 
