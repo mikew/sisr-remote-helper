@@ -56,8 +56,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        if: endsWith(github.ref, '/main')
 
       - uses: googleapis/release-please-action@v4
+        if: endsWith(github.ref, '/main')
         id: release_please
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
