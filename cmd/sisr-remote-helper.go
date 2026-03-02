@@ -83,7 +83,7 @@ var uwpCommand = cli.Command{
 	},
 
 	Action: func(ctx context.Context, cmd *cli.Command) error {
-		aumid := cmd.Args().Get(0)
+		aumid := cmd.Args().First()
 		if aumid == "" {
 			return fmt.Errorf("AUMID is required")
 		}
@@ -205,21 +205,16 @@ var win32Command = cli.Command{
 			Name:  "grep",
 			Usage: "Also consider the app running if any process exe path contains this string (can be specified multiple times)",
 		},
-
-		&cli.StringSliceFlag{
-			Name:  "arg",
-			Usage: "Argument to pass to the executable (can be specified multiple times)",
-		},
 	},
 
 	Action: func(ctx context.Context, cmd *cli.Command) error {
-		exePath := cmd.Args().Get(0)
+		exePath := cmd.Args().First()
 		if exePath == "" {
 			return fmt.Errorf("exe path is required")
 		}
 
 		greps := cmd.StringSlice("grep")
-		exeArgs := cmd.StringSlice("arg")
+		exeArgs := cmd.Args().Tail()
 
 		ctx, stop := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer stop()
