@@ -119,6 +119,14 @@ func StartAndWaitForUwpApp(aumid string) error {
 	return nil
 }
 
+func KillUwpApp(family string) {
+	pids := FindPidsForFamily(family)
+
+	for _, pid := range pids {
+		exec.Command("taskkill", "/F", "/T", "/PID", fmt.Sprintf("%d", pid)).Run()
+	}
+}
+
 // func forceFocus(family string) bool {
 // 	pids, _ := process.Pids()
 // 	foundWindow := false

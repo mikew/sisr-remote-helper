@@ -7,11 +7,14 @@ import (
 	"log/slog"
 	"os"
 	"os/exec"
+	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
-	srh "github.com/mikew/sisr-remote-helper/internal"
 	"github.com/urfave/cli/v3"
+
+	srh "github.com/mikew/sisr-remote-helper/internal"
 )
 
 func main() {
@@ -26,7 +29,10 @@ func main() {
 	}
 	os.Stdout = logFile
 	os.Stderr = logFile
-	defer logFile.Close()
+	cleanup := func() {
+		logFile.Close()
+	}
+	defer cleanup()
 
 	cmd := &cli.Command{
 		Name:    manifest.Name,
@@ -40,6 +46,10 @@ func main() {
 
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		slog.Error(fmt.Sprintf("Error running %s", manifest.Name), slog.Any("error", err))
+
+		// Manually cleanup since defer won't run on os.Exit.
+		cleanup()
+
 		os.Exit(1)
 	}
 }
@@ -71,6 +81,10 @@ var uwpCommand = cli.Command{
 		if aumid == "" {
 			return fmt.Errorf("AUMID is required")
 		}
+
+		ctx, stop := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
+		defer stop()
+		done := make(chan error, 1)
 
 		shouldStartSisr := cmd.Bool("start-sisr")
 
@@ -109,7 +123,7 @@ var uwpCommand = cli.Command{
 		}
 
 		defer func() {
-			if shouldStartSisr && sisrCmd != nil && sisrCmd.Process != nil {
+			if sisrCmd != nil && sisrCmd.Process != nil {
 				slog.Info("Killing SISR helper", slog.Any("pid", sisrCmd.Process.Pid))
 				// sisrCmd.Process.Kill()
 				killCmd := exec.Command("taskkill", "/F", "/T", "/PID", fmt.Sprintf("%d", sisrCmd.Process.Pid))
@@ -133,12 +147,22 @@ var uwpCommand = cli.Command{
 			}
 		}()
 
-		slog.Info("Launching app", slog.Any("aumid", aumid))
-		// procAllowSetForeground.Call(uintptr(ASFW_ANY))
-		if err := srh.StartAndWaitForUwpApp(aumid); err != nil {
-			return fmt.Errorf("failed to start and wait for UWP app: %w", err)
-		}
+		go func() {
+			slog.Info("Launching app", slog.Any("aumid", aumid))
+			// procAllowSetForeground.Call(uintptr(ASFW_ANY))
+			done <- srh.StartAndWaitForUwpApp(aumid)
+		}()
 
-		return nil
+		select {
+		case <-ctx.Done():
+			slog.Warn("Interrupted by user")
+
+			targetFamily := strings.Split(aumid, "_")[0]
+			srh.KillUwpApp(targetFamily)
+
+			return ctx.Err()
+		case err := <-done:
+			return err
+		}
 	},
 }
