@@ -75,6 +75,11 @@ var uwpCommand = cli.Command{
 		&cli.StringFlag{
 			Name: "sisr-config",
 		},
+
+		&cli.StringSliceFlag{
+			Name:  "grep",
+			Usage: "Also consider the app running if any process exe path contains this string (can be specified multiple times)",
+		},
 	},
 
 	Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -82,6 +87,8 @@ var uwpCommand = cli.Command{
 		if aumid == "" {
 			return fmt.Errorf("AUMID is required")
 		}
+
+		greps := cmd.StringSlice("grep")
 
 		ctx, stop := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 		defer stop()
@@ -156,7 +163,7 @@ var uwpCommand = cli.Command{
 		go func() {
 			slog.Info("Launching app", slog.Any("aumid", aumid))
 			// procAllowSetForeground.Call(uintptr(ASFW_ANY))
-			done <- srh.StartAndWaitForUwpApp(aumid)
+			done <- srh.StartAndWaitForUwpApp(aumid, greps)
 		}()
 
 		select {
@@ -164,7 +171,7 @@ var uwpCommand = cli.Command{
 			slog.Warn("Interrupted by user")
 
 			targetFamily := strings.Split(aumid, "_")[0]
-			srh.KillUwpApp(targetFamily)
+			srh.KillUwpApp(targetFamily, greps)
 
 			return ctx.Err()
 		case err := <-done:

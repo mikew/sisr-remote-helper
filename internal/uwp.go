@@ -71,7 +71,7 @@ func FindPidsForFamily(family string) []int32 {
 	return foundPids
 }
 
-func StartAndWaitForUwpApp(aumid string) error {
+func StartAndWaitForUwpApp(aumid string, greps []string) error {
 	targetFamily := strings.Split(aumid, "_")[0]
 
 	// exec.Command("explorer", `shell:AppsFolder\`+aumid).Run()
@@ -90,7 +90,7 @@ func StartAndWaitForUwpApp(aumid string) error {
 	didGiveGracePeriod := false
 
 	for {
-		isRunning := len(FindPidsForFamily(targetFamily)) > 0
+		isRunning := len(FindPidsForFamily(targetFamily)) > 0 || len(FindPidsMatchingGreps(greps)) > 0
 
 		if isRunning {
 			// If we haven't successfully grabbed focus yet, try now
@@ -107,7 +107,7 @@ func StartAndWaitForUwpApp(aumid string) error {
 				didGiveGracePeriod = true
 			}
 
-			if len(FindPidsForFamily(targetFamily)) < 1 {
+			if len(FindPidsForFamily(targetFamily)) < 1 && len(FindPidsMatchingGreps(greps)) < 1 {
 				slog.Info("UWP App closed")
 				break
 			}
@@ -119,10 +119,10 @@ func StartAndWaitForUwpApp(aumid string) error {
 	return nil
 }
 
-func KillUwpApp(family string) {
-	pids := FindPidsForFamily(family)
+func KillUwpApp(family string, greps []string) {
+	allPids := append(FindPidsForFamily(family), FindPidsMatchingGreps(greps)...)
 
-	for _, pid := range pids {
+	for _, pid := range allPids {
 		exec.Command("taskkill", "/F", "/T", "/PID", fmt.Sprintf("%d", pid)).Run()
 	}
 }
