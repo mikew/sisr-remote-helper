@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/mikew/sisr-remote-helper/compare/v1.0.0...v1.1.0) (2026-03-02)
+
+
+### Features
+
+* Add `win32` command to launch regular executables ([#8](https://github.com/mikew/sisr-remote-helper/issues/8)) ([5402b71](https://github.com/mikew/sisr-remote-helper/commit/5402b71b3d7b0aae299dc3907a242099d97e798c)), closes [#7](https://github.com/mikew/sisr-remote-helper/issues/7)
+* At least attempt to handle signals ([#4](https://github.com/mikew/sisr-remote-helper/issues/4)) ([c262263](https://github.com/mikew/sisr-remote-helper/commit/c2622631a0d4a53a1e00886e0e5310fd162106bc))
+
+
+### Bug Fixes
+
+* Vibration in Forza Horizon 5 ([#6](https://github.com/mikew/sisr-remote-helper/issues/6)) ([6b530d5](https://github.com/mikew/sisr-remote-helper/commit/6b530d5219875af5cced518e59282e9d16c2f363))
+
 ## 1.0.0 (2026-03-01)
 
 
