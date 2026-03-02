@@ -120,6 +120,11 @@ var uwpCommand = cli.Command{
 			if err != nil {
 				return fmt.Errorf("failed to start SISR: %w", err)
 			}
+
+			// Need to wait a bit before doing anything else.
+			// Helps with vibration in Forza Horizon 5 at least, and TMNT Shredder's
+			// Revenge seeing double controllers.
+			time.Sleep(5 * time.Second)
 		}
 
 		defer func() {
