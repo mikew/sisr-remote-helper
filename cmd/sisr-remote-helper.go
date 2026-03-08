@@ -17,6 +17,8 @@ import (
 	srh "github.com/mikew/sisr-remote-helper/internal"
 )
 
+const SISR_LAUCNH_DELAY = 7 * time.Second
+
 func main() {
 	manifest, err := srh.GetManifest()
 	if err != nil {
@@ -132,7 +134,7 @@ var uwpCommand = cli.Command{
 			// Need to wait a bit before doing anything else.
 			// Helps with vibration in Forza Horizon 5 at least, and TMNT Shredder's
 			// Revenge seeing double controllers.
-			time.Sleep(5 * time.Second)
+			time.Sleep(SISR_LAUCNH_DELAY)
 		}
 
 		defer func() {
@@ -182,6 +184,7 @@ var uwpCommand = cli.Command{
 
 var win32Command = cli.Command{
 	Name:      "win32",
+	Aliases:   []string{"exec"},
 	Usage:     "Launch SISR and a Win32 executable",
 	ArgsUsage: "<exe-path>",
 
@@ -245,7 +248,7 @@ var win32Command = cli.Command{
 				return fmt.Errorf("failed to start SISR: %w", err)
 			}
 
-			time.Sleep(5 * time.Second)
+			time.Sleep(SISR_LAUCNH_DELAY)
 		}
 
 		defer func() {
