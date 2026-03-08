@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/mikew/sisr-remote-helper/compare/v1.1.0...v1.1.1) (2026-03-08)
+
+
+### Bug Fixes
+
+* Document `win32` / `exec`, copy-paste snippet to list UWP apps ([#11](https://github.com/mikew/sisr-remote-helper/issues/11)) ([3b54bf5](https://github.com/mikew/sisr-remote-helper/commit/3b54bf59002ffcfbda0d2af0c8cc8b6803c7cfa7)), closes [#10](https://github.com/mikew/sisr-remote-helper/issues/10)
+
 ## [1.1.0](https://github.com/mikew/sisr-remote-helper/compare/v1.0.0...v1.1.0) (2026-03-02)
 
 
