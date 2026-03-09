@@ -300,8 +300,8 @@ var listUwpAppsCommand = cli.Command{
 	Usage:   "List installed apps in a new window",
 
 	Action: func(ctx context.Context, cmd *cli.Command) error {
-		psCommand := `Get-StartApps | ForEach-Object { $_.Name; $_.AppID; "---------" }; pause; exit`
-		listCmd := exec.Command("cmd", "/c", "start", "powershell", "-NoExit", "-Command", psCommand)
+		psCommand := `Get-StartApps | ForEach-Object { $_.Name; $_.AppID; "---------" }; pause`
+		listCmd := exec.Command("cmd", "/c", "start", "powershell", "-Command", psCommand)
 		listCmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 		return listCmd.Run()
 	},
