@@ -27,11 +27,13 @@ finicky third-party launcher games directly.
    uwp MICROSOFT.MINECRAFTUWP_8wekyb3d8bbwe!Game
    ```
 
-To list your UWP apps and their AUMIDs, you can paste this into a PowerShell prompt:
+To list your UWP apps and their AUMIDs, run:
 
-```powershell
-Get-StartApps | ForEach-Object { $_.Name; $_.AppID; "---------" }
 ```
+sisr-remote-helper listapps
+```
+
+This will open a new window with the list.
 
 ### win32
 
