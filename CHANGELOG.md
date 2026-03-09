@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/mikew/sisr-remote-helper/compare/v1.1.1...v1.2.0) (2026-03-09)
+
+
+### Features
+
+* Actual `listapps` command ([#13](https://github.com/mikew/sisr-remote-helper/issues/13)) ([a82f5ac](https://github.com/mikew/sisr-remote-helper/commit/a82f5ac98e4878940da3eff4af44962b984186de)), closes [#9](https://github.com/mikew/sisr-remote-helper/issues/9)
+
 ## [1.1.1](https://github.com/mikew/sisr-remote-helper/compare/v1.1.0...v1.1.1) (2026-03-08)
 
 
